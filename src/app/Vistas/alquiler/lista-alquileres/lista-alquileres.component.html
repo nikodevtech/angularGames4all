@@ -18,6 +18,8 @@
               <tr>
                 <th>Datos del juego alquilado</th>
                 <th>Datos del usuario</th>
+                <th>Fecha alquiler</th>
+                <th>Fecha entrega</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -25,6 +27,8 @@
               <tr *ngFor="let alquiler of listaAlquileres">
                 <td>{{ alquiler.juegoData.nombre }} - {{ alquiler.juegoData.plataforma }} - {{ alquiler.juegoData.genero }}</td>
                 <td>{{ alquiler.usuarioData.nombre }} - {{ alquiler.usuarioData.dni }} - {{ alquiler.usuarioData.direccion }} - {{ alquiler.usuarioData.email }}</td>
+                <td>{{ alquiler.fechaAlquiler | date: "dd/MM/yyyy" }}</td>
+                <td>{{ alquiler.fechaEntrega | date: "dd/MM/yyyy" }}</td>
                 <td>
                   <i
                     class="bi bi-pencil-square fs-5 me-2 text-primary"

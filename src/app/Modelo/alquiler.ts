@@ -14,6 +14,8 @@ export interface Alquiler {
     };
     idJuego: string;
     idUsuario: string;
+    fechaAlquiler: Date;
+    fechaEntrega: Date;
     fechaActualizacion: Date;
     fechaCreacion?: Date;
 }

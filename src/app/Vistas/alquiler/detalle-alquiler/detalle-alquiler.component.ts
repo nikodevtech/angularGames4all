@@ -32,6 +32,8 @@ export class DetalleAlquilerComponent {
     this.createAlquiler = this.formBuilder.group({
       juego: ['', Validators.required],
       usuario: ['', Validators.required],
+      fechaalquiler: ['', Validators.required],
+      fechaentrega: ['', Validators.required]
     });
     this.id = this.route.snapshot.paramMap.get('id');
   }
@@ -82,11 +84,12 @@ export class DetalleAlquilerComponent {
     const alquiler: Alquiler = {
       idJuego: this.createAlquiler.value.juego,
       idUsuario: this.createAlquiler.value.usuario,
+      fechaAlquiler: this.createAlquiler.value.fechaalquiler,
+      fechaEntrega: this.createAlquiler.value.fechaentrega,
       juegoData: this.getJuegoData(this.createAlquiler.value.juego),
       usuarioData: this.getUsuarioData(this.createAlquiler.value.usuario),
       fechaActualizacion: new Date(),
     };
-
     this._firebaseService
       .actualizar('alquileres', id, alquiler)
       .then(() => {
@@ -108,11 +111,14 @@ export class DetalleAlquilerComponent {
     const alquiler: Alquiler = {
       idJuego: this.createAlquiler.value.juego,
       idUsuario: this.createAlquiler.value.usuario,
+      fechaAlquiler: this.createAlquiler.value.fechaalquiler,
+      fechaEntrega: this.createAlquiler.value.fechaentrega,
       juegoData: this.getJuegoData(this.createAlquiler.value.juego),
       usuarioData: this.getUsuarioData(this.createAlquiler.value.usuario),
       fechaCreacion: new Date(),
       fechaActualizacion: new Date(),
     };
+    console.log(alquiler);
     this._firebaseService
       .insertar('alquileres', alquiler)
       .then(() => {
@@ -129,7 +135,7 @@ export class DetalleAlquilerComponent {
       });
   }
 
-  esEditar() {
+/*   esEditar() {
     if (this.id !== null) {
       this.loading = true;
       this.textoButton = 'Editar';
@@ -141,11 +147,42 @@ export class DetalleAlquilerComponent {
           this.createAlquiler.setValue({
             juego: respuesta.payload.data()['idJuego'],
             usuario: respuesta.payload.data()['idUsuario'],
+            fechaalquiler: respuesta.payload.data()['fechaAlquiler'],
+            fechaentrega: respuesta.payload.data()['fechaEntrega'],            
           });
         });
     }
-  }
+  } */
 
+  esEditar() {
+    if (this.id !== null) {
+      this.loading = true;
+      this.textoButton = 'Editar';
+      this.titulo = 'Editar Alquiler';
+      this._firebaseService
+        .obtenerPorId('alquileres', this.id)
+        .subscribe((respuesta) => {
+          this.loading = false;
+  
+          const fechaAlquiler = new Date(respuesta.payload.data()['fechaAlquiler']);
+          const fechaEntrega = new Date(respuesta.payload.data()['fechaEntrega']);
+  
+          const fechaAlquilerFormateada = fechaAlquiler.toISOString().split('T')[0];
+          const fechaEntregaFormateada = fechaEntrega.toISOString().split('T')[0];
+  
+          if (fechaAlquiler && fechaEntrega) {
+            this.createAlquiler.setValue({
+              juego: respuesta.payload.data()['idJuego'],
+              usuario: respuesta.payload.data()['idUsuario'],
+              fechaalquiler: fechaAlquilerFormateada,
+              fechaentrega: fechaEntregaFormateada,
+            });
+          }
+        });
+    }
+  }
+  
+  
   private getJuegoData(idJuego: string): any {
     const juego = this.listaJuegos.find((juego) => juego.id === idJuego);
     if (juego) {

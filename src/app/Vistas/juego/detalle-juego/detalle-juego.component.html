@@ -1,82 +1,52 @@
 <div class="container mt-5">
-    <div class="row">
-      <div class="col-lg-8 offset-lg-2">
-        <div class="card text-center p-3">
-          <div class="card-body">
-            <i class="bi bi-controller p-2 fs-1"></i>
-            <h3>
-              {{ titulo }}
-              <div *ngIf="loading" class="spinner-border float-end" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            </h3>
-            <span
-              *ngIf="submitted && createJuego.invalid"
-              class="badge bg-danger"
-              >Todos los campos son obligatorios
-            </span>
-  <!-- 
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <div class="card text-center p-3">
+        <div class="card-body">
+          <i class="bi bi-controller p-2 fs-1"></i>
+          <h3>
+            {{ titulo }}
+            <div *ngIf="loading" class="spinner-border float-end" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </h3>
+          <span *ngIf="submitted && createJuego.invalid" class="badge bg-danger">Todos los campos son obligatorios
+          </span>
+          <!-- 
     El atributo [formGroup] está vinculado al atributo de tipo FormGroup "createEmpleado" 
     definido en el componente, estableciendo una conexión entre la plantilla 
     HTML del componente y la lógica del formulario
   -->
-            <form
-              class="mt-4"
-              [formGroup]="createJuego"
-              (ngSubmit)="agregarEditarJuego()"
-            >
-              <div class="row">
-                <div class="col">
-  <!-- 
+          <form class="mt-4" [formGroup]="createJuego" (ngSubmit)="agregarEditarJuego()">
+            <div class="row">
+              <div class="col">
+                <!-- 
     formControlName establece la conexión entre este input en la plantilla y 
     el control "apellido" definido en el FormGroup "createEmpleado" del componente.
     De esta manera, Angular gestiona la sincronización entre la vista y el modelo, 
     permitiendo la validación y actualización del estado del formulario.
   -->
-                  <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    formControlName="nombre"
-                    placeholder="nombre"
-                  />
-                </div>
-                <div class="col">
-                  <input
-                    type="text"
-                    class="form-control form-control-lg"
-                    formControlName="genero"
-                    placeholder="genero"
-                  />
-                </div>
+                <input type="text" class="form-control form-control-lg" formControlName="nombre" placeholder="nombre" />
               </div>
-              <input
-                class="form-control form-control-lg mt-3"
-                type="text"
-                formControlName="plataforma"
-                placeholder="plataforma"
-              />
-              <input
-                class="form-control form-control-lg mt-3"
-                type="date"
-                formControlName="fechalanzamiento"
-                placeholder="fecha de lanzamiento"
-              />
-              <div class="mt-3">
-                <button
-                  type="text"
-                  class="btn btn-secondary btn-lg btn-block me-3"
-                  routerLink="/juegos/listado"
-                >
-                  Volver
-                </button>
-                <button type="submit" class="btn btn-dark btn-lg btn-block">
-                  {{ textoButton }}
-                </button>
+              <div class="col">
+                <input type="text" class="form-control form-control-lg" formControlName="genero" placeholder="genero" />
               </div>
-            </form>
-          </div>
+            </div>
+            <input class="form-control form-control-lg mt-3" type="text" formControlName="plataforma"
+              placeholder="plataforma" />
+            <input class="form-control form-control-lg mt-3" type="date" formControlName="fechalanzamiento"
+              placeholder="fecha de lanzamiento" />
+            <div class="mt-3">
+              <button type="text" class="btn btn-secondary btn-lg btn-block me-3" routerLink="/juegos/listado">
+                Volver
+              </button>
+              <button type="submit" class="btn btn-dark btn-lg btn-block">
+                {{ textoButton }}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
-  
+</div>
