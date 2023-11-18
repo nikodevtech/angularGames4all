@@ -1,0 +1,56 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-body">
+      <span class="h3">Listado de Juegos</span>
+      <button
+        type="button"
+        class="btn btn-dark float-end p-2"
+        routerLink="/juegos/crear"
+      >
+      <i class="bi bi-controller p-2 fs-5"> Agregar</i>
+      </button>
+      <div>
+        <table
+          class="table table-striped mt-5"
+          *ngIf="listaJuegos.length > 0; else noHayJuegos"
+        >
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Genero</th>
+              <th>Plataforma</th>
+              <th>Fecha de lanzamiento</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let juego of listaJuegos">
+              <td>{{ juego.nombre }}</td>
+              <td>{{ juego.genero }}</td>
+              <td>{{ juego.plataforma }}</td>
+              <td>{{ juego.fechaLanzamiento | date: "dd/MM/yyyy" }}</td>
+              <td>
+                <i
+                  class="bi bi-pencil-square fs-5 me-2 text-primary"
+                  routerLink="/juegos/editar/{{ juego.id }}"
+                ></i>
+                <i
+                  *ngIf="juego.id"
+                  (click)="confirmarAccion(juego.id, juego.nombre)"
+                  class="bi bi-trash fs-5 text-danger"
+                ></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #noHayJuegos>
+          <div class="text-center">
+            <span class="badge bg-secondary my-4 fs-6 p-2"
+              >No hay datos para mostrar</span
+            >
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

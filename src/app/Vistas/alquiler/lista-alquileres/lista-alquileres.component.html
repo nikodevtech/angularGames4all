@@ -1,0 +1,53 @@
+<div class="container mt-5">
+    <div class="card">
+      <div class="card-body">
+        <span class="h3">Listado de Alquileres</span>
+        <button
+          type="button"
+          class="btn btn-dark float-end p-2"
+          routerLink="/alquileres/crear"
+        >
+        <i class="bi bi-bag-plus-fill fs-5 p-2"> Agregar</i>
+        </button>
+        <div>
+          <table
+            class="table table-striped mt-5"
+            *ngIf="listaAlquileres.length > 0; else noHayAlquileres"
+          >
+            <thead>
+              <tr>
+                <th>Datos del juego alquilado</th>
+                <th>Datos del usuario</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let alquiler of listaAlquileres">
+                <td>{{ alquiler.juegoData.nombre }} - {{ alquiler.juegoData.plataforma }} - {{ alquiler.juegoData.genero }}</td>
+                <td>{{ alquiler.usuarioData.nombre }} - {{ alquiler.usuarioData.dni }} - {{ alquiler.usuarioData.direccion }} - {{ alquiler.usuarioData.email }}</td>
+                <td>
+                  <i
+                    class="bi bi-pencil-square fs-5 me-2 text-primary"
+                    routerLink="/alquileres/editar/{{ alquiler.id }}"
+                  ></i>
+                  <i
+                    *ngIf="alquiler.id"
+                    (click)="confirmarAccion(alquiler.id)"
+                    class="bi bi-trash fs-5 text-danger"
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noHayAlquileres>
+            <div class="text-center">
+              <span class="badge bg-secondary my-4 fs-6 p-2"
+                >No hay datos para mostrar</span
+              >
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+  

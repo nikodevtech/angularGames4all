@@ -1,0 +1,56 @@
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-body">
+      <span class="h3">Listado de Usuarios</span>
+      <button
+        type="button"
+        class="btn btn-dark float-end p-2"
+        routerLink="/usuarios/crear"
+      >
+        <i class="bi bi-person-add p-2 fs-5"> Agregar</i>
+      </button>
+      <div>
+        <table
+          class="table table-striped mt-5"
+          *ngIf="listaUsuarios.length > 0; else noHayUsuarios"
+        >
+          <thead>
+            <tr>
+              <th>Nombre y apellidos</th>
+              <th>DNI</th>
+              <th>Dirección</th>
+              <th>Email</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of listaUsuarios">
+              <td>{{ usuario.nombre }}</td>
+              <td>{{ usuario.dni }}</td>
+              <td>{{ usuario.direccion }}</td>
+              <td>{{ usuario.email }}</td>
+              <td>
+                <i
+                  class="bi bi-pencil-square fs-5 me-2 text-primary"
+                  routerLink="/usuarios/editar/{{ usuario.id }}"
+                ></i>
+                <i
+                  *ngIf="usuario.id"
+                  (click)="confirmarAccion(usuario.id, usuario.dni)"
+                  class="bi bi-trash fs-5 text-danger"
+                ></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #noHayUsuarios>
+          <div class="text-center">
+            <span class="badge bg-secondary my-4 fs-6 p-2"
+              >No hay datos para mostrar</span
+            >
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

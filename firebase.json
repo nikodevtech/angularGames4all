@@ -1,0 +1,9 @@
+{
+  "hosting": [
+    {
+      "target": "games4all",
+      "source": ".",
+      "frameworksBackend": {}
+    }
+  ]
+}

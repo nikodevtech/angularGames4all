@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ludoteca-af04c": {
+      "hosting": {
+        "games4all": [
+          "ludoteca-af04c"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ludoteca-af04c"
+  }
+}
