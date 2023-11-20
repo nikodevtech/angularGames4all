@@ -3,9 +3,9 @@ import { Alquiler } from 'src/app/Modelo/alquiler';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
 import { Juego } from 'src/app/Modelo/juego';
+import { NotificacionesService } from 'src/app/Servicios/notificaciones.service';
 
 @Component({
   selector: 'app-detalle-alquiler',
@@ -26,8 +26,8 @@ export class DetalleAlquilerComponent {
     private formBuilder: FormBuilder,
     private _firebaseService: FirebaseService,
     private router: Router,
-    private toastr: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private _notificacionesService: NotificacionesService
   ) {
     this.createAlquiler = this.formBuilder.group({
       juego: ['', Validators.required],
@@ -94,10 +94,7 @@ export class DetalleAlquilerComponent {
       .actualizar('alquileres', id, alquiler)
       .then(() => {
         this.loading = false;
-        this.toastr.info(
-          'El alquiler fue actualizado con éxito',
-          'Alquiler Actualizado'
-        );
+        this._notificacionesService.notificacionModificar("alquiler");
         this.router.navigate(['/alquileres/listado']);
       })
       .catch((error) => {
@@ -122,11 +119,8 @@ export class DetalleAlquilerComponent {
     this._firebaseService
       .insertar('alquileres', alquiler)
       .then(() => {
-        this.toastr.success(
-          'El Alquiler fue registrado con éxito',
-          'Alquiler Registrado'
-        );
         this.loading = false;
+        this._notificacionesService.notificacionRegistrar("alquiler");
         this.router.navigate(['/alquileres/listado']);
       })
       .catch((error) => {
@@ -135,25 +129,10 @@ export class DetalleAlquilerComponent {
       });
   }
 
-/*   esEditar() {
-    if (this.id !== null) {
-      this.loading = true;
-      this.textoButton = 'Editar';
-      this.titulo = 'Editar Alquiler';
-      this._firebaseService
-        .obtenerPorId('alquileres', this.id)
-        .subscribe((respuesta) => {
-          this.loading = false;
-          this.createAlquiler.setValue({
-            juego: respuesta.payload.data()['idJuego'],
-            usuario: respuesta.payload.data()['idUsuario'],
-            fechaalquiler: respuesta.payload.data()['fechaAlquiler'],
-            fechaentrega: respuesta.payload.data()['fechaEntrega'],            
-          });
-        });
-    }
-  } */
 
+  /**
+   * Cuando se quiere editar se cargan los datos en el formulario con el id del alquiler
+   */
   esEditar() {
     if (this.id !== null) {
       this.loading = true;

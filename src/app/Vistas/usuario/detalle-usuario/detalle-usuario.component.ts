@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { Usuario } from 'src/app/Modelo/usuario';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
+import { NotificacionesService } from 'src/app/Servicios/notificaciones.service';
 
 @Component({
   selector: 'app-detalle-usuario',
@@ -22,8 +22,8 @@ export class DetalleUsuarioComponent {
     private formBuilder: FormBuilder, //Dependencia para form reactivo
     private _firebaseService: FirebaseService,
     private router: Router, //Dependecia para navegar entre rutas
-    private toastr: ToastrService, //Dependencia para alerts con estilo
-    private route: ActivatedRoute //Dependencia para acceder al id por la ruta
+    private route: ActivatedRoute ,//Dependencia para acceder al id por la ruta
+    private _notificacionesService: NotificacionesService //Dependencia para mostrar mensajes
   ) {
     // Inicializa el formulario con formBuilder y define campos con validadores
     this.createUsuario = this.formBuilder.group({
@@ -81,10 +81,7 @@ export class DetalleUsuarioComponent {
       .actualizar('usuarios', id, usuario)
       .then(() => {
         this.loading = false;
-        this.toastr.info(
-          'El usuario fue actualizado con exito',
-          'usuario Actualizado'
-        );
+        this._notificacionesService.notificacionModificar("usuario");
         this.router.navigate(['/usuarios/listado']);
       })
       .catch((error) => {
@@ -112,10 +109,7 @@ export class DetalleUsuarioComponent {
     this._firebaseService
       .insertar('usuarios', usuario)
       .then(() => {
-        this.toastr.success(
-          'El usuario fue registrado con exito',
-          'usuario Registrado'
-        );
+        this._notificacionesService.notificacionRegistrar("usuario");
         this.loading = false;
         this.router.navigate(['/usuarios/listado']);
       })

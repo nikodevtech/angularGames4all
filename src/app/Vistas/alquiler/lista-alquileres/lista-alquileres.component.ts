@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Alquiler } from 'src/app/Modelo/alquiler';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
+import { NotificacionesService } from 'src/app/Servicios/notificaciones.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -9,13 +10,22 @@ import Swal from 'sweetalert2';
   styleUrls: ['./lista-alquileres.component.css'],
 })
 export class ListaAlquileresComponent {
+
   listaAlquileres: Alquiler[] = []; 
-  constructor(private _firebaseService: FirebaseService) {}
+
+  constructor(
+    private _firebaseService: FirebaseService,
+    private _notificacionesService: NotificacionesService
+  ) {}
 
   ngOnInit() {
     this.getAlquileres();
   }
 
+  /**
+   * Obtiene todos los alquileres registrados en firebase con dicho servicio
+   * @returns suscripcion al observable
+   */
   getAlquileres() {
     return this._firebaseService.obtenerTodos('alquileres').subscribe((data) => {
       this.listaAlquileres = [];
@@ -28,36 +38,13 @@ export class ListaAlquileresComponent {
       });
     });
   }
-  eliminarAlquiler(id: string) {
-    this._firebaseService
-      .eliminar('alquileres', id)
-      .then(() => {
-        console.log('Alquiler eliminado');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
-  confirmarAccion(id: string ) {
-    Swal.fire({
-      title: `¿Estás seguro de eliminar el alquiler?`,
-      text: 'Esta acción no se puede deshacer',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#18BE79',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.eliminarAlquiler(id);
-        Swal.fire(
-          '¡Acción completada!',
-          'Usuario eliminado con éxito.',
-          'success'
-        );
-      }
-    });
+   /**
+   * Elimina un alquiler llamando al servicio para confirmación de eliminación
+   * @param id del aluiler a eliminar
+   * @param nombreJuego del alquiler para mostrarlo en la notificación
+   */
+  eliminarAlquiler(id: string, nombreJuego: string) {
+    this._notificacionesService.confirmarEliminar(id, nombreJuego, 'alquiler', 'alquileres');
   }
 }

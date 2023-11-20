@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { Juego } from 'src/app/Modelo/juego';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
+import { NotificacionesService } from 'src/app/Servicios/notificaciones.service';
 
 @Component({
   selector: 'app-detalle-juego',
@@ -22,8 +22,8 @@ export class DetalleJuegoComponent {
     private formBuilder: FormBuilder, //Dependencia para form reactivo
     private _firebaseService: FirebaseService,
     private router: Router, //Dependecia para navegar entre rutas
-    private toastr: ToastrService, //Dependencia para alerts con estilo
-    private route: ActivatedRoute //Dependencia para acceder al id por la ruta
+    private route: ActivatedRoute, //Dependencia para acceder al id por la ruta
+    private _notificacionesService: NotificacionesService
   ) {
     // Inicializa el formulario con formBuilder y define campos con validadores
     this.createJuego = this.formBuilder.group({
@@ -83,10 +83,7 @@ export class DetalleJuegoComponent {
       .actualizar('juegos', id, juego)
       .then(() => {
         this.loading = false;
-        this.toastr.info(
-          'El juego fue actualizado con exito',
-          'Juego Actualizado'
-        );
+        this._notificacionesService.notificacionModificar("juego");
         this.router.navigate(['/juegos/listado']);
       })
       .catch((error) => {
@@ -117,11 +114,8 @@ export class DetalleJuegoComponent {
     this._firebaseService
       .insertar('juegos', juego)
       .then(() => {
-        this.toastr.success(
-          'El juego fue registrado con exito',
-          'Juego Registrado'
-        );
         this.loading = false;
+        this._notificacionesService.notificacionRegistrar("juego");
         this.router.navigate(['/juegos/listado']);
       })
       .catch((error) => {

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Juego } from 'src/app/Modelo/juego';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
+import { NotificacionesService } from 'src/app/Servicios/notificaciones.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -11,7 +12,10 @@ import Swal from 'sweetalert2';
 export class ListaJuegosComponent {
   listaJuegos: Juego[] = [];
 
-  constructor(private _firebaseService: FirebaseService) {}
+  constructor(
+    private _firebaseService: FirebaseService,
+    private _notificacionesService: NotificacionesService
+  ) {}
 
   ngOnInit(): void {
     this.getJuegos();
@@ -21,7 +25,7 @@ export class ListaJuegosComponent {
   //element.payload.doc.data -->  accede a la data (campos) del documento
 
   /**
-   * Obtiene todos los juegos de firebase con el servicio
+   * Obtiene todos los juegos registrados en firebase con dicho servicio
    * @returns suscripcion al observable
    */
   getJuegos() {
@@ -39,44 +43,13 @@ export class ListaJuegosComponent {
   }
 
   /**
-   * Elimina un juego llamando al servicio
+   * Elimina un juego llamando al servicio de confimación
    * @param id del juego a eliminar
+   * @param nombre del juego para mostrarlo en la notificación
    */
-  eliminarJuego(id: string) {
-    this._firebaseService
-      .eliminar('juegos',id)
-      .then(() => {
-        console.log('juego eliminado');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  eliminarJuego(id: string, nombre: string) {
+    this._notificacionesService.confirmarEliminar(id, nombre, 'juego', 'juegos');
   }
 
-  /**
-   * Método para mostrar un Alert con la libreria sweetalert para confirmar acciones
-   * @param id id del juego a borrar
-   */
-  confirmarAccion(id: string, nombre: string) {
-    Swal.fire({
-      title: `¿Estás seguro de eliminar el juego ${nombre}?`,
-      text: 'Esta acción no se puede deshacer',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#18BE79',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Se elimina empleado si se confirma la acción
-        this.eliminarJuego(id);
-        Swal.fire(
-          '¡Acción completada!',
-          'Juego eliminado con éxito.',
-          'success'
-        );
-      }
-    });
-  }
+
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Usuario } from 'src/app/Modelo/usuario';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
-import Swal from 'sweetalert2';
+import { NotificacionesService } from 'src/app/Servicios/notificaciones.service';
 
 @Component({
   selector: 'app-lista-usuarios',
@@ -12,7 +12,10 @@ export class ListaUsuariosComponent {
   
   listaUsuarios: Usuario[] = [];
 
-  constructor(private _firebaseService: FirebaseService) {}
+  constructor(
+    private _firebaseService: FirebaseService,
+    private _notificacionesService: NotificacionesService
+    ) {}
 
   ngOnInit(): void {
     this.getUsuarios();
@@ -22,7 +25,7 @@ export class ListaUsuariosComponent {
   //element.payload.doc.data -->  accede a la data (campos) del documento
 
   /**
-   * Obtiene todos los juegos de firebase con el servicio
+   * Obtiene todos los juegos registrados en firebase con dicho servicio
    * @returns suscripcion al observable
    */
   getUsuarios() {
@@ -39,44 +42,11 @@ export class ListaUsuariosComponent {
   }
 
   /**
-   * Elimina un juego llamando al servicio
+   * Elimina un juego llamando al servicio para confirmar la eliminación
    * @param id del juego a eliminar
    */
-  eliminarUsuario(id: string) {
-    this._firebaseService
-      .eliminar('usuarios',id)
-      .then(() => {
-        console.log('Usuario eliminado');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  eliminarUsuario(id: string, dni: string) {
+    this._notificacionesService.confirmarEliminar(id, dni, 'usuario', 'usuarios');
   }
 
-  /**
-   * Método para mostrar un Alert con la libreria sweetalert para confirmar acciones
-   * @param id id del juego a borrar
-   */
-  confirmarAccion(id: string, dni: string) {
-    Swal.fire({
-      title: `¿Estás seguro de eliminar el usuario con DNI ${dni}?`,
-      text: 'Esta acción no se puede deshacer',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#18BE79',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Se elimina empleado si se confirma la acción
-        this.eliminarUsuario(id);
-        Swal.fire(
-          '¡Acción completada!',
-          'Usuario eliminado con éxito.',
-          'success'
-        );
-      }
-    });
-  }
 }

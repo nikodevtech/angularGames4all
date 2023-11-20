@@ -36,7 +36,7 @@
                   ></i>
                   <i
                     *ngIf="alquiler.id"
-                    (click)="confirmarAccion(alquiler.id)"
+                    (click)="eliminarAlquiler(alquiler.id, alquiler.juegoData.nombre)"
                     class="bi bi-trash fs-5 text-danger"
                   ></i>
                 </td>
